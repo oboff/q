@@ -29,4 +29,4 @@ tdd:tdd except turn:1?tdd
 tdd:tdd except river:1?tdd
 
 / Create Game Table
-gamet:([game:game]players:players;card1;card2;n#flop;n#turn;n#river)
+gamet:([game:game]players:players;card1;card2;n#enlist flop;n#turn;n#river)
