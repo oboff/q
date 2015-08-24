@@ -1,10 +1,8 @@
 / Create playing card deck
+numc:2+til 14
+facec:`c`d`h`s
+d:numc cross facec
 
-td:"234567890JQKA" cross "HCDS"
-tdsym:`$td
-tdmap:asc tdsym
-/	tdtbl:flip te:`id`card!flip tdmap
-tn:til 52
 
 / Number of Players
 n:5
@@ -19,29 +17,28 @@ m:n
 while[m>0;players:(`$("p",string(m))),players;m:m-1]	
 
 / Deal to players
-/	tdd:(td  except (card1:(-1*n)?td))	/ Deals n cards
-/	tdd:(tdd except (card2:(-1*n)?tdd))	/ Deals n cards again for hold'em
-
-/ td except tdd = 10	/ 1b
-tnd:(tn except (card1:(-1*n)?tn))
-tnd:(tnd except (card2:(-1*n)?tnd))
+tn:til 52
+dd:tn except card1:(-1*n)?tn
+dd:dd except card2:(-1*n)?dd
+dd:dd except flop:-3?dd
+dd:dd except turn:1?dd
+dd:dd except river:1?dd
 
 / Deal the Flop
-/	tdd:tdd except flop:-3?tdd
-tnd:tnd except flop:-3?tnd
+/tnd:tnd except flop:-3?tnd
 
 / Deal the Turn
-/	tdd:tdd except turn:1?tdd
-tnd:tnd except turn:1?tnd
+/tnd:tnd except turn:1?tnd
 
 / Deal the River
-/	tdd:tdd except river:1?tdd
-tnd:tnd except river:1?tnd
+/tnd:tnd except river:1?tnd
 
 / Create Game Table
-gamen:([game:game]players:players;card1;card2;n#enlist flop;n#turn;n#river)
-gamet:([game:game]players:players;card1t:tdmap card1;card2t:tdmap card2;n#enlist tdmap flop;n#tdmap turn;n#tdmap river)
+/gamen:([game:game]players:players;card1;card2;n#enlist flop;n#turn;n#river)
+/gamet:([game:game]players:players;card1t:tdmap card1;card2t:tdmap card2;n#enlist tdmap flop;n#tdmap turn;n#tdmap river)
 
+players!cards:(((card1,'card2,'n#enlist flop),'n#enlist turn),'n#enlist river)
+d[cards]
 / 
 Sample Output:
 
