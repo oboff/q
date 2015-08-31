@@ -1,0 +1,98 @@
+q)(-10?10) + (-10?10) % 10. + (-10?10) % 100. + (-10?10) % 1000.
+3.595238 0.8964144 8.797607 2.099305 7.497513 1.299401 4 9.7 5.198216 6.397614
+
+fact:{$[x=0;1;x*fact[x-1]]}
+
+
+<ob_> im unsure how to interpret this function, horner:{{z+y*x}[y]/[x]}
+<ob_> it accepts a list and a scalar
+<ob_> as parameters
+<tangentstorm> what's z, then?
+<ischtche> {z+y*x} is the 3-arg function
+<ischtche> that akes x,y,z in order and does the thing
+<ischtche> also,  horner  is a 2-arg function
+<ischtche> which takes y and plugs it in as the x in {z+y*x}
+<ischtche> i.e. curries in that argument
+<ischtche> this leaves a 2-arg function, which is then applied over x monadically, i.e. folded
+<ob_> what is z?
+<ischtche> z is the third argument
+<ischtche> k/q scope is as local as it can be
+<ischtche> so in horner, {z+y*x} refers to a 3-argument function
+<ischtche> where x and y are the first and second arguments to this subfunction, not to horner
+<ob_> q)a:1 2 3 4 5f
+<ob_> q).stat.horner[a] 2f
+<ob_> 57f
+<ob_> 2 arguments are passed, where does the third, z, come from?
+<ischtche> so, to wit,  horner[a1,a2,a3;b]  ->  {z+y*x}[b]/[a1,a2,a3]  ->  {y+x*b}/[a1,a2,a3]  ->  {y+x*b}[ {y+x*b}[a1;a2]; a3]
+<ischtche> ->  {y+x*b}[ a2+a1*b; a3] 
+<ischtche> again, let me reiterate
+<ischtche> {z+y*x} is a 3-arg function
+<ischtche> let us call it f for now
+<ischtche> f:{z+y*x}
+<ischtche> then horner is defined  horner:{f[y]/[x]}
+<ischtche> f is a 3-arg function
+<ischtche> so f[something] is "f project something", that is, preload the first argument with "something"
+<ischtche> i.e. you can consider f[something] to be defined {y+x*something}
+<ischtche> this is where names might get confusing, because you alreade have something you want to think of as y
+<ischtche> in any case, f[something] is thus a 2-arg function
+<ob_> ok, trying to wrap my head around it, thank you very much
+<ischtche> so you can / it over a list
+<ischtche> just like +/
+<ischtche> it should be noted that horner's method is a method of evaluating polynomials given an input and some coefficients
+<ischtche> https://en.wikipedia.org/wiki/Horner%27s_method
+<ischtche> so presumably horner is doing that
+<ob_> yes
+<ischtche> let that intuition guide you
+<ob_> tremendous help, ischtche
+<ob_> ischtche, {y+x*b}[ a2+a1*b; a3] -> a3+a2+a1*b*b ?
+<ischtche> not quite
+<ischtche> you want some parentheses in there
+<ischtche> because a2+a1*b is evaluated first, and then plugged into {y+x*b}, you have to do something to symbolize that fact
+<ischtche> and the best way to do that is via parentheses, since that would have the exact same effect
+<ob_> a2+a1*b is a scalar
+<ischtche> so  {y+x*b}[ a2+a1*b; a3]  ->  {y+x*b}[ (a2+a1*b); a3]  ->  a3+(a2+a1*b)*b
+<ob_> ah yes of course
+<ischtche> parens only mean list if you put a semicolon somewhere in the middle
+<ischtche> (a;b) is a list of a and b
+<ischtche> (a) is just a
+<ischtche> ,a is a list of just a
+<ob_> got it
+
+ewma:{{(y*1-x)+z*x}[x]\[y]}
+
+q)ewma[.25] 1 2 3 4 5f
+1 1.25 1.6875 2.265625 2.949219
+
+{{(x*1-b)+y*x}[b]\[a1 a2 a3]}
+{{(x*1-b)+y*b}\[a1 a2 a3]}
+{{(x*1-b)+y*b}[{(x*1-b)+y*b}[a1 a2]; a3]}
+{{(x*1-b)+y*b}[(a1*1-b)+a2*b; a3]}
+(((a1*1-b)+a2*b)*1-b)+a3*b
+(((x*1-b)+y*b)*1-b)+z*b
+
+ewma:{{y+x*z-y}[x]\[y]}
+{{y+x*z-y}[x]\[y]}[a1 a2 a3; b]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
