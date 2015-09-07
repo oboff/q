@@ -1,4 +1,5 @@
 ltbins:{[bs;l]
- n:count l;
- map:til[n]!tbins:n#raze bs#'til n;
- map}
+ n:1+max l;
+ map:til[n]!tbins:n#raze bs#'til (1+floor n%`float$bs);
+ l!map[l]
+ }
