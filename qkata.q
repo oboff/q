@@ -124,6 +124,7 @@ q)if[f~key f;system "l ", 1_string f]
 		(-1#` vs x)!1#v	/idk		
 
 .stat.gbm	{[s;r;t;z]exp(t*r-.5*s*s)+z*s*sqrt t}
+		/s:volatility;r:rate of drift;t:interval time step;z:normal random realizations
 		/simple arithmetic
 
 wday:		{x where 1<x mod 7}
@@ -134,5 +135,27 @@ wday:		{x where 1<x mod 7}
 		00111110011111b
 		q)(2000.01.01+til 14) where 1<(2000.01.01+til 14) mod 7
 		2000.01.03 2000.01.04 2000.01.05 2000.01.06 2000.01.07 2000.01.10 2000.01.11 ..
+
+TABLES		
+CREATE TABLE	dt:2000.01.01+til 100
+		p:	
 		
-			
+FILL EMPTY DATES 	dt:.util.rng[1;2000.01.01;2001.01.01];
+			dtw:.util.wday[2000.01.01+til 365];
+			dtww:dtw!(til count dtw);
+			dt#dtww;
+			fills dt#dtww;
+			0^fills dt#dtww;
+			q)0^fills dt#dtww
+				2000.01.01| 0
+				2000.01.02| 0
+				2000.01.03| 0
+				2000.01.04| 1
+				2000.01.05| 2
+				2000.01.06| 3
+				2000.01.07| 4
+				2000.01.08| 4
+				2000.01.09| 4
+				2000.01.10| 5
+
+		
